@@ -12,7 +12,11 @@ void Group::setTexture(Texture *texture)
 	}
 
 	Group::texture = texture;
-	hasTexture = true;
+}
+
+void Group::setTexture(Texture &texture)
+{
+	Group::texture = &texture;
 }
 
 void Group::addSurface(const Surface &f)
@@ -22,12 +26,17 @@ void Group::addSurface(const Surface &f)
 
 void Group::glDrawGroup()
 {
-	if(hasTexture)
+	bool b = texture ? texture->hasTexture() : false;
+
+	if(b)
+	{
 		texture->enableTexture();
+	}
 
 	for(Surface &f : surface)
 	{
-		f.glDrawSurface();
+		f.glDrawSurface(b);
+//		f.glDrawSurface();
 	}
 }
 
@@ -37,9 +46,4 @@ void Group::translateGroup(double x, double y, double z)
 	{
 		f.translateSurface(x, y, z);
 	}
-}
-
-bool Group::haveTexture() const
-{
-	return hasTexture;
 }

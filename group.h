@@ -13,17 +13,17 @@ class Group
 private:
 	std::vector<Surface> surface;
 	Texture *texture = nullptr;
-	bool hasTexture = false;
+//	bool hasTexture = false;
 
 public:
 	Group() = default;
 
 public:
 	void setTexture(Texture *texture);
+	void setTexture(Texture &texture);
 	void addSurface(const Surface &f);
 	void glDrawGroup();
 	void translateGroup(double x, double y, double z);
-	bool haveTexture() const;
 };
 
 

@@ -19,7 +19,7 @@ private:
 	std::vector<Point> texturePoint;
 	Vector normal;
 //	Texture *texture = nullptr;
-	bool hasTexture = false;
+//	bool hasTexture = false;
 
 public:
 	Surface() = default;
@@ -27,14 +27,14 @@ public:
 	Surface(std::vector<Point> &point, std::vector<Point> &texturePoint);
 
 public:
-	void glDrawSurface();
+	void glDrawSurface(bool hasTexture = false);
 	void setSurface(std::vector<Point> &point);
 //	void setTexture(Texture *texture);
 	void setTexturePoint(std::vector<Point> &texturePoint);
 	void addPoint(Point &point);
 	void addTexturePoint(Point &texturePoint);
 	void setNormal(Vector &vector);
-	void setHasTexture(bool hasTexture);
+//	void setHasTexture(bool hasTexture);
 	void translateSurface(double x, double y, double z);
 };
 

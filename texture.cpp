@@ -15,58 +15,10 @@ void Texture::setTexture(char *File)
 	initTexture();
 }
 
-//AUX_RGBImageRec *Texture::LoadBMP(char *Filename)
-//{
-//	FILE *File = nullptr;
-//
-//	if(!Filename)
-//	{
-//		return nullptr;
-//	}
-//
-//	File = fopen(Filename, "r");
-//
-//	if(File)
-//	{
-//		fclose(File);
-//		return auxDIBImageLoad(Filename);
-//	}
-//
-//	return nullptr;
-//}
-
 bool Texture::LoadGLTextures()
 {
-//	bool Status = false;
-//
-//	AUX_RGBImageRec *TextureImage[1];
-//	memset(TextureImage, 0, sizeof(void *) * 1);
-//	TextureImage[0] = LoadBMP(textureFile);
-//
-//	if(TextureImage[0])
-//	{
-//		Status = true;
-//
-//		glGenTextures(1, &textureID);
-//
-//		glBindTexture(GL_TEXTURE_2D, textureID);
-//		glTexImage2D(GL_TEXTURE_2D, 0, 3, TextureImage[0]->sizeX, TextureImage[0]->sizeY,
-//		             0, GL_RGB, GL_UNSIGNED_BYTE, TextureImage[0]->data);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//	}
-//
-//	if(TextureImage[0])
-//	{
-//		if(TextureImage[0]->data)
-//		{
-//			free(TextureImage[0]->data);
-//		}
-//
-//		free(TextureImage[0]);
-//	}
-//
-//	return Status;
+	glEnable(GL_TEXTURE_2D);
+	glShadeModel(GL_SMOOTH);
 
 	const int BMP_Header_Length = 54;
 	GLint width, height, total_bytes;
@@ -87,9 +39,11 @@ bool Texture::LoadGLTextures()
 	while(line_bytes % 4 != 0)
 		++line_bytes;
 	total_bytes = line_bytes * height;
+
 	pixels = (GLubyte *) malloc(static_cast<size_t>(total_bytes));
 	fread(pixels, static_cast<size_t>(total_bytes), 1, pFile);
 	glGenTextures(1, &textureID);
+
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixels);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -98,6 +52,11 @@ bool Texture::LoadGLTextures()
 	fclose(pFile);
 
 	return true;
+}
+
+bool Texture::hasTexture()
+{
+	return textureID != 0;
 }
 
 bool Texture::initTexture()

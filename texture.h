@@ -28,6 +28,7 @@ public:
 	bool LoadGLTextures();
 	bool initTexture();
 	void enableTexture();
+	bool hasTexture();
 };
 
 

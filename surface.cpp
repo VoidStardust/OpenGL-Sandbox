@@ -9,7 +9,7 @@ Surface::Surface(std::vector<Point> &point) : point(point) {}
 Surface::Surface(std::vector<Point> &point, std::vector<Point> &texturePoint) :
 		point(point), texturePoint(texturePoint) {}
 
-void Surface::glDrawSurface()
+void Surface::glDrawSurface(bool hasTexture)
 {
 //	if(hasTexture)
 //		texture->enableTexture();
@@ -64,10 +64,10 @@ void Surface::setNormal(Vector &vector)
 	Surface::normal = vector;
 }
 
-void Surface::setHasTexture(bool hasTexture)
-{
-	Surface::hasTexture = hasTexture;
-}
+//void Surface::setHasTexture(bool hasTexture)
+//{
+//	Surface::hasTexture = hasTexture;
+//}
 
 void Surface::translateSurface(double x, double y, double z)
 {

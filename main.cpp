@@ -68,6 +68,7 @@ void initLight()
 int initGL()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
+	glEnable(GL_TEXTURE_2D);
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 	glClearDepth(1.0f);
@@ -149,11 +150,9 @@ void OnMove(int x, int y)
 
 int main(int argc, char *argv[])
 {
-	fstream input1("mech_f_432.obj");
-	model.getModel(input1);
-	input1.close();
-
-	camera.setUpLock(true);
+//	fstream input1("mech_f_432.obj");
+//	model.getModel(input1);
+//	input1.close();
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
@@ -163,6 +162,11 @@ int main(int argc, char *argv[])
 
 	initGL();
 	initLight();
+
+//	fstream input1("test.obj");
+	fstream input1("mech_f_432.obj");
+	model.getModel(input1);
+	input1.close();
 
 	glutDisplayFunc(OnDraw);
 	glutIdleFunc(OnDraw);

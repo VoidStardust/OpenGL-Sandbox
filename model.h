@@ -10,10 +10,11 @@
 #include <map>
 #include <fstream>
 #include <sstream>
-#include <regex>
+#include <string>
 #include "point.h"
 #include "vector.h"
 #include "group.h"
+#include "material.h"
 
 class Model
 {
@@ -21,7 +22,7 @@ private:
 	std::vector<Point> point = {Point()};
 	std::vector<Point> texturePoint = {Point()};
 	std::vector<Vector> normal = {Vector()};
-	std::map<std::string, Texture> texture;
+	std::map<std::string, Material> material;
 	std::vector<Group> group;
 
 private:
@@ -31,9 +32,11 @@ private:
 	double angleZ = 0;
 
 private:
+//	char buf[100] = "";
 	void loadMTL(std::istream &is);
 	void decode(std::string s, Surface &surface);
-//	std::string getGroup(std::istream &is, Group &g);
+	std::vector<std::string> stringToken(std::string token, char match = ' ');
+//	bool stringToken(std::string s, int &pos, std::string &token, char match);
 
 public:
 	Model() = default;
