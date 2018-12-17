@@ -19,8 +19,8 @@ private:
 	std::vector<double> kd;
 	std::vector<double> ks;
 	std::vector<double> ke;
-	double ni = 0;
-	double d = 0;
+	double ni;
+	double d;
 
 public:
 	Material() = default;

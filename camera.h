@@ -6,6 +6,7 @@
 #define OPENGL_CAMERA_H
 
 #include <GL/glut.h>
+#include <iostream>
 #include "point.h"
 #include "vector.h"
 
@@ -16,6 +17,10 @@ private:
 	Point center = {0, 0, 0};
 	Point up = {0, 0, 1};
 	bool upLock = false;
+
+public:
+	Camera() = default;
+	explicit Camera(bool upLock);
 
 public:
 	void setUpLock(bool upLock);

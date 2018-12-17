@@ -11,20 +11,11 @@ Model::Model(std::istream &is)
 
 void Model::glDrawModel()
 {
-//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//	glMatrixMode(GL_MODELVIEW);
-//	glLoadIdentity();
-//	glTranslated(translate.getX(), translate.getY(), translate.getZ());
-//	glRotated(angleX, 1, 0, 0);
-//	glRotated(angleY, 0, 1, 0);
-//	glRotated(angleZ, 0, 0, 1);
-
 	for(Group &g : group)
 	{
 		g.glDrawGroup();
 	}
-
-//	glLoadIdentity();
+	glFlush();
 }
 
 void Model::getModel(std::istream &is)
@@ -69,12 +60,12 @@ void Model::getModel(std::istream &is)
 		else if(label == "v")
 		{
 			double x = std::stod(List[1]);
-			double y = std::stod(List[2]);
-			double z = std::stod(List[3]);
+			double y = std::stod(List[3]);
+			double z = std::stod(List[2]);
 
-//			x /= 100;
-//			y /= 100;
-//			z /= 100;
+			x /= 5000;
+			y /= 5000;
+			z /= 5000;
 
 			point.emplace_back(x, y, z);
 		}
@@ -99,7 +90,7 @@ void Model::getModel(std::istream &is)
 			if(tempGroup)
 			{
 				group.push_back(std::move(*tempGroup));
-				std::cout << "Group load successfully!\n" << std::endl;
+//				std::cout << "Group load successfully!\n" << std::endl;
 				delete tempGroup;
 			}
 
@@ -109,12 +100,12 @@ void Model::getModel(std::istream &is)
 			if(label == "g")
 			{
 				groupName = List[1];
-				std::cout << groupName << ": Loading group......" << std::endl;
+//				std::cout << groupName << ": Loading group......" << std::endl;
 			}
 			else
 			{
 				std::string mtlID = List[1];
-				std::cout << mtlID << ": Loading material......" << std::endl;
+//				std::cout << mtlID << ": Loading material......" << std::endl;
 				auto p = material.find(mtlID);
 				if(p != material.end())
 				{
@@ -150,7 +141,7 @@ void Model::getModel(std::istream &is)
 	if(tempGroup)
 	{
 		group.push_back(std::move(*tempGroup));
-		std::cout << "Group load successfully!\n" << std::endl;
+//		std::cout << "Group load successfully!\n" << std::endl;
 		delete tempGroup;
 	}
 
@@ -187,7 +178,7 @@ void Model::loadMTL(std::istream &is)
 			tempMaterial = new Material();
 			materialName = List[1];
 
-			std::cout << materialName << ": Loading new material......" << std::endl;
+//			std::cout << materialName << ": Loading new material......" << std::endl;
 		}
 		else if(label == "Ns")
 		{

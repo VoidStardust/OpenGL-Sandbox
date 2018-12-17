@@ -11,11 +11,6 @@ Surface::Surface(std::vector<Point> &point, std::vector<Point> &texturePoint) :
 
 void Surface::glDrawSurface(bool hasTexture)
 {
-//	if(hasTexture)
-//		texture->enableTexture();
-//
-//	glBegin(GL_TRIANGLES);
-
 	glBegin(GL_POLYGON);
 	for(int i = 0; i < point.size(); ++i)
 	{
@@ -32,12 +27,6 @@ void Surface::glDrawSurface(bool hasTexture)
 	}
 	glEnd();
 }
-
-//void Surface::setTexture(Texture *texture)
-//{
-//	Surface::texture = texture;
-//	hasTexture = true;
-//}
 
 void Surface::setTexturePoint(std::vector<Point> &texturePoint)
 {
@@ -63,11 +52,6 @@ void Surface::setNormal(Vector &vector)
 {
 	Surface::normal = vector;
 }
-
-//void Surface::setHasTexture(bool hasTexture)
-//{
-//	Surface::hasTexture = hasTexture;
-//}
 
 void Surface::translateSurface(double x, double y, double z)
 {

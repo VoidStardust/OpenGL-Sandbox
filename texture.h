@@ -7,7 +7,9 @@
 
 #include <cstdio>
 #include <iostream>
+#include <cmath>
 #include <GL/glu.h>
+#include <olectl.h>
 
 class Texture
 {
@@ -26,6 +28,7 @@ public:
 	void setTexture(char *File);
 	void setTexture(std::string File);
 	bool LoadGLTextures();
+	bool LoadGLTextures(char *szPathName);
 	bool initTexture();
 	void enableTexture();
 	bool hasTexture();

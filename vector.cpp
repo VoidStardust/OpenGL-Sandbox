@@ -28,7 +28,7 @@ double Vector::scalarProduct(const Vector &left, const Vector &right)
 
 double Vector::abs(const Vector &vector)
 {
-	return sqrtl(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+	return sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
 }
 
 Vector Vector::unitVector(const Vector &vector)
@@ -89,8 +89,8 @@ void Vector::setZ(double z)
 
 Vector Vector::rotate(Vector vector, Vector axis, double theta)
 {
-	double s = sinl(theta);
-	double c = cosl(theta);
+	double s = sin(theta);
+	double c = cos(theta);
 	double x = axis.x;
 	double y = axis.y;
 	double z = axis.z;

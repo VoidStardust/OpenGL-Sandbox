@@ -11,6 +11,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <olectl.h>
 #include "point.h"
 #include "vector.h"
 #include "group.h"
@@ -32,11 +33,9 @@ private:
 	double angleZ = 0;
 
 private:
-//	char buf[100] = "";
 	void loadMTL(std::istream &is);
 	void decode(std::string s, Surface &surface);
 	std::vector<std::string> stringToken(std::string token, char match = ' ');
-//	bool stringToken(std::string s, int &pos, std::string &token, char match);
 
 public:
 	Model() = default;

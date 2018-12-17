@@ -4,6 +4,8 @@
 
 #include "camera.h"
 
+Camera::Camera(bool upLock) : upLock(upLock) {}
+
 void Camera::setUpLock(bool upLock)
 {
 	Camera::upLock = upLock;
