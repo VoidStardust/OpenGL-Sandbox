@@ -24,6 +24,7 @@ public:
 	void addSurface(const Surface &f);
 	void glDrawGroup();
 	void translateGroup(double x, double y, double z);
+	void rotateGroup(Point center, Vector axis, double angle);
 };
 
 

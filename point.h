@@ -28,6 +28,7 @@ public:
 	void setPoint(double x, double y, double z);
 	void movePoint(double x, double y, double z);
 	void movePoint(const Vector &vector);
+	void rotatePoint(Point center, Vector axis, double angle);
 };
 
 

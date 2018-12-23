@@ -10,6 +10,7 @@
 #include <cmath>
 #include <GL/glu.h>
 #include <olectl.h>
+#include "LoadPNG/lodepng.h"
 
 class Texture
 {
@@ -18,7 +19,8 @@ private:
 	GLuint textureID = 0;
 
 private:
-//	AUX_RGBImageRec *LoadBMP(char *Filename);
+	bool LoadPNG(char *fileName);
+	bool LoadIMG(char *szPathName);
 
 public:
 	Texture() = default;
@@ -28,7 +30,6 @@ public:
 	void setTexture(char *File);
 	void setTexture(std::string File);
 	bool LoadGLTextures();
-	bool LoadGLTextures(char *szPathName);
 	bool initTexture();
 	void enableTexture();
 	bool hasTexture();

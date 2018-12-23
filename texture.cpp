@@ -21,41 +21,15 @@ void Texture::setTexture(char *File)
 
 bool Texture::LoadGLTextures()
 {
-	glEnable(GL_TEXTURE_2D);
-	glShadeModel(GL_SMOOTH);
-
-	const int BMP_Header_Length = 54;
-	GLint width, height, total_bytes;
-	GLubyte *pixels = nullptr;
-	FILE *pFile = fopen(textureFile, "rb");
-
-	if(!pFile)
+	std::string s = textureFile;
+	if(s.find(".png") != std::string::npos)
 	{
-		std::cout << textureFile << ": File does not exist." << std::endl;
-		return false;
+		return LoadPNG(textureFile);
 	}
-
-	fseek(pFile, 0x0012, SEEK_SET);
-	fread(&width, 4, 1, pFile);
-	fread(&height, 4, 1, pFile);
-	fseek(pFile, BMP_Header_Length, SEEK_SET);
-	GLint line_bytes = width * 3;
-	while(line_bytes % 4 != 0)
-		++line_bytes;
-	total_bytes = line_bytes * height;
-
-	pixels = (GLubyte *) malloc(static_cast<size_t>(total_bytes));
-	fread(pixels, static_cast<size_t>(total_bytes), 1, pFile);
-	glGenTextures(1, &textureID);
-
-	glBindTexture(GL_TEXTURE_2D, textureID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixels);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	free(pixels);
-	fclose(pFile);
-
-	return true;
+	else
+	{
+		return LoadIMG(textureFile);
+	}
 }
 
 bool Texture::hasTexture()
@@ -65,8 +39,8 @@ bool Texture::hasTexture()
 
 bool Texture::initTexture()
 {
-//	if(!LoadGLTextures())
-	if(!LoadGLTextures(textureFile))
+	if(!LoadGLTextures())
+//	if(!LoadGLTextures(textureFile))
 	{
 		return false;
 	}
@@ -77,6 +51,7 @@ bool Texture::initTexture()
 
 void Texture::enableTexture()
 {
+	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
@@ -86,7 +61,7 @@ void Texture::setTexture(std::string File)
 	initTexture();
 }
 
-bool Texture::LoadGLTextures(char *szPathName)
+bool Texture::LoadIMG(char *szPathName)
 {
 	HDC hdcTemp;
 	HBITMAP hbmpTemp;
@@ -194,4 +169,44 @@ bool Texture::LoadGLTextures(char *szPathName)
 	pPicture->Release();
 
 	return TRUE;
+}
+
+bool Texture::LoadPNG(char *fileName)
+{
+	unsigned error;
+	unsigned width, height;
+	unsigned char *pImg;
+	error = lodepng_decode32_file(&pImg, &width, &height, fileName);
+	if(error)
+	{
+		printf("error %u: %s\n", error, lodepng_error_text(error));
+		return false;
+	}
+
+	unsigned i;
+	unsigned char *pLine;
+
+	pLine = (unsigned char *) malloc(4 * width);
+	if(pLine == nullptr)
+	{
+		printf("No memory left!");
+		return false;
+	}
+	for(i = 0; i < height / 2; i++)
+	{
+		memcpy(pLine, &pImg[i * 4 * width], 4 * width);
+		memcpy(&pImg[i * 4 * width], &pImg[(height - 1 - i) * 4 * width], 4 * width);
+		memcpy(&pImg[(height - 1 - i) * 4 * width], pLine, 4 * width);
+	}
+	free(pLine);
+
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pImg);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glEnable(GL_DEPTH_TEST);
+	free(pImg);
+
+	return true;
 }

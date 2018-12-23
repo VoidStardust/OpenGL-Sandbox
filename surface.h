@@ -32,6 +32,7 @@ public:
 	void addTexturePoint(Point &texturePoint);
 	void setNormal(Vector &vector);
 	void translateSurface(double x, double y, double z);
+	void rotateSurface(Point center, Vector axis, double angle);
 };
 
 

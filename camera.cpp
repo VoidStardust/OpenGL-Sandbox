@@ -62,7 +62,7 @@ void Camera::rotateAroundCenter(double x_dif, double y_dif)
 	Vector perspective(eye, center);
 	Vector upVector(Point(0, 0, 0), up);
 
-	Vector axis = Vector::unitVector(Vector::vectorProduct(perspective, upVector));
+	Vector axis = Vector::vectorProduct(perspective, upVector);
 
 	Vector d = Vector::rotate(perspective, axis, y_dif);
 	Vector e = Vector::rotate(upVector, axis, y_dif);
@@ -72,7 +72,7 @@ void Camera::rotateAroundCenter(double x_dif, double y_dif)
 
 	Vector f = Vector::unitVector(perspective);
 	Vector g = f * Vector::scalarProduct(upVector, f);
-	Vector h = Vector::unitVector(upVector - g);
+	Vector h = upVector - g;
 
 	Vector i = Vector::rotate(perspective, h, x_dif);
 	Vector j = Vector::rotate(upVector, h, x_dif);
@@ -97,7 +97,7 @@ void Camera::rotateAroundEye(double x_dif, double y_dif)
 	Vector perspective(eye, center);
 	Vector upVector(Point(0, 0, 0), up);
 
-	Vector yAxis = Vector::unitVector(Vector::vectorProduct(perspective, upVector));
+	Vector yAxis = Vector::vectorProduct(perspective, upVector);
 	Vector moveY = Vector::rotate(perspective, yAxis, y_dif) - perspective;
 
 	Vector xAxis;
@@ -105,11 +105,11 @@ void Camera::rotateAroundEye(double x_dif, double y_dif)
 	{
 		Vector f = Vector::unitVector(perspective);
 		Vector g = f * Vector::scalarProduct(upVector, f);
-		xAxis = Vector::unitVector(upVector - g);
+		xAxis = upVector - g;
 	}
 	else
 	{
-		xAxis = Vector::unitVector(upVector);
+		xAxis = upVector;
 	}
 
 	Vector moveX = Vector::rotate(perspective, xAxis, x_dif) - perspective;

@@ -4,6 +4,8 @@
 
 #include "model.h"
 
+Model::Model(double ratio) : ratio(ratio) {}
+
 Model::Model(std::istream &is)
 {
 	getModel(is);
@@ -15,7 +17,6 @@ void Model::glDrawModel()
 	{
 		g.glDrawGroup();
 	}
-	glFlush();
 }
 
 void Model::getModel(std::istream &is)
@@ -60,12 +61,12 @@ void Model::getModel(std::istream &is)
 		else if(label == "v")
 		{
 			double x = std::stod(List[1]);
-			double y = std::stod(List[3]);
-			double z = std::stod(List[2]);
+			double y = std::stod(List[2]);
+			double z = std::stod(List[3]);
 
-			x /= 5000;
-			y /= 5000;
-			z /= 5000;
+			x *= ratio;
+			y *= ratio;
+			z *= ratio;
 
 			point.emplace_back(x, y, z);
 		}
@@ -85,12 +86,13 @@ void Model::getModel(std::istream &is)
 			double z = std::stod(List[3]);
 			normal.emplace_back(x, y, z);
 		}
-		else if(label == "usemtl" || label == "g")
+//		else if(label == "usemtl" || label == "g")
+		else if(label == "usemtl")
 		{
 			if(tempGroup)
 			{
 				group.push_back(std::move(*tempGroup));
-//				std::cout << "Group load successfully!\n" << std::endl;
+				std::cout << "Group load successfully!\n" << std::endl;
 				delete tempGroup;
 			}
 
@@ -100,12 +102,12 @@ void Model::getModel(std::istream &is)
 			if(label == "g")
 			{
 				groupName = List[1];
-//				std::cout << groupName << ": Loading group......" << std::endl;
+				std::cout << groupName << ": Loading group......" << std::endl;
 			}
 			else
 			{
 				std::string mtlID = List[1];
-//				std::cout << mtlID << ": Loading material......" << std::endl;
+				std::cout << mtlID << ": Loading material......" << std::endl;
 				auto p = material.find(mtlID);
 				if(p != material.end())
 				{
@@ -116,6 +118,10 @@ void Model::getModel(std::istream &is)
 					std::cout << mtlID << ": Fail to load material!" << std::endl;
 				}
 			}
+		}
+		else if(label == "g")
+		{
+			//
 		}
 		else if(label == "s")
 		{
@@ -141,7 +147,7 @@ void Model::getModel(std::istream &is)
 	if(tempGroup)
 	{
 		group.push_back(std::move(*tempGroup));
-//		std::cout << "Group load successfully!\n" << std::endl;
+		std::cout << "Group load successfully!\n" << std::endl;
 		delete tempGroup;
 	}
 
@@ -178,7 +184,7 @@ void Model::loadMTL(std::istream &is)
 			tempMaterial = new Material();
 			materialName = List[1];
 
-//			std::cout << materialName << ": Loading new material......" << std::endl;
+			std::cout << materialName << ": Loading new material......" << std::endl;
 		}
 		else if(label == "Ns")
 		{
@@ -303,11 +309,12 @@ void Model::translateModel(double x, double y, double z)
 	}
 }
 
-void Model::rotateModel(double angleX, double angleY, double angleZ)
+void Model::rotateModel(Point center, Vector axis, double angle)
 {
-	Model::angleX = angleX;
-	Model::angleY = angleY;
-	Model::angleZ = angleZ;
+	for(Group &g : group)
+	{
+		g.rotateGroup(center, axis, angle);
+	}
 }
 
 std::vector<std::string> Model::stringToken(std::string token, char match)

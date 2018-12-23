@@ -32,6 +32,10 @@ void Group::glDrawGroup()
 	{
 		texture->enableTexture();
 	}
+//	else
+//	{
+//		glDisable(GL_TEXTURE_2D);
+//	}
 
 	for(Surface &f : surface)
 	{
@@ -45,5 +49,13 @@ void Group::translateGroup(double x, double y, double z)
 	for(Surface &f : surface)
 	{
 		f.translateSurface(x, y, z);
+	}
+}
+
+void Group::rotateGroup(Point center, Vector axis, double angle)
+{
+	for(Surface &f : surface)
+	{
+		f.rotateSurface(center, axis, angle);
 	}
 }

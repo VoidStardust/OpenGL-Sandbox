@@ -55,3 +55,11 @@ void Point::movePoint(const Vector &vector)
 {
 	movePoint(vector.x, vector.y, vector.z);
 }
+
+void Point::rotatePoint(Point center, Vector axis, double angle)
+{
+	Vector a(center, *this);
+	Vector b = Vector::rotate(a, axis, angle);
+	Vector c = b - a;
+	movePoint(c);
+}

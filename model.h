@@ -27,10 +27,11 @@ private:
 	std::vector<Group> group;
 
 private:
-	Vector translate = {-1, 0, 0};
-	double angleX = 0;
-	double angleY = 0;
-	double angleZ = 0;
+	double ratio = 1;
+//	Vector translate = {-1, 0, 0};
+//	double angleX = 0;
+//	double angleY = 0;
+//	double angleZ = 0;
 
 private:
 	void loadMTL(std::istream &is);
@@ -39,13 +40,14 @@ private:
 
 public:
 	Model() = default;
+	Model(double ratio);
 	explicit Model(std::istream &is);
 
 public:
 	void glDrawModel();
 	void getModel(std::istream &is);
 	void translateModel(double x, double y, double z);
-	void rotateModel(double angleX, double angleY, double angleZ);
+	void rotateModel(Point center, Vector axis, double angle);
 };
 
 

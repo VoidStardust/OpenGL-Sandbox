@@ -11,7 +11,9 @@ using namespace std;
 const int WIDTH = 1000;
 const int HEIGHT = 500;
 
-Model model;
+Model model(0.001);
+Model skybox(1);
+Model plane(0.001);
 Camera camera(true);
 
 int x_pos = 0;
@@ -70,7 +72,7 @@ int initGL()
 	glClear(GL_COLOR_BUFFER_BIT);
 	glEnable(GL_TEXTURE_2D);
 	glShadeModel(GL_SMOOTH);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
+	glClearColor(0.2f, 0.2f, 0.2f, 0.5f);
 	glClearDepth(1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -84,7 +86,13 @@ void OnDraw()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	camera.setCamera();
 
+	skybox.glDrawModel();
+	plane.glDrawModel();
 	model.glDrawModel();
+
+	glFlush();
+
+	plane.rotateModel(Point(0, 0, 0), Vector(0, 0, 1), 0.01);
 }
 
 void OnDraw1()
@@ -190,9 +198,9 @@ void OnMouse(int button, int state, int x, int y)
 		x_pos = x;
 		y_pos = y;
 		if(button == GLUT_LEFT_BUTTON)
-			push_button = 1;
-		else if(button == GLUT_RIGHT_BUTTON)
 			push_button = 2;
+		else if(button == GLUT_RIGHT_BUTTON)
+			push_button = 1;
 		else if(button == 3)
 		{
 			camera.scale(ratio);
@@ -214,6 +222,10 @@ void OnKeyboard(unsigned char key, int x, int y)
 		camera.translate(0, -ratio * 10, 0);
 	if(key == 'd')
 		camera.translate(ratio * 10, 0, 0);
+	if(key == 'q')
+		plane.rotateModel(Point(0, 10, 0), Vector(0, 0, 1), 0.01);
+	if(key == 'e')
+		plane.rotateModel(Point(0, 10, 0), Vector(0, 0, 1), -0.01);
 }
 
 void OnMove(int x, int y)
@@ -251,9 +263,26 @@ int main(int argc, char *argv[])
 	initLight();
 
 	fstream input1("Castelia_City/Castelia_City.obj");
+//	fstream input1("twins/Twin_Islands.obj");
 //	fstream input1("mech_f_432.obj");
+//	fstream input1("airplane/11803_Airplane_v1_l1.obj");
+//	fstream input1("boat/12219_boat_v2_L2.obj");
+//	fstream input1("test/test.obj");
 	model.getModel(input1);
 	input1.close();
+
+	model.rotateModel(Point(0, 0, 0), Vector(1, 0, 0), 1.5707963267948966192313216916398);
+
+	fstream input2("airplane/11803_Airplane_v1_l1.obj");
+	plane.getModel(input2);
+	input2.close();
+
+	plane.rotateModel(Point(0, 0, 0), Vector(1, 0, 0), 1.5707963267948966192313216916398);
+	plane.translateModel(0, -30, 20);
+
+	fstream input3("test/test.obj");
+	skybox.getModel(input3);
+	input3.close();
 
 	glutDisplayFunc(OnDraw);
 	glutIdleFunc(OnDraw);

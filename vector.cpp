@@ -89,6 +89,7 @@ void Vector::setZ(double z)
 
 Vector Vector::rotate(Vector vector, Vector axis, double theta)
 {
+	axis = Vector::unitVector(axis);
 	double s = sin(theta);
 	double c = cos(theta);
 	double x = axis.x;

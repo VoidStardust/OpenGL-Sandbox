@@ -60,3 +60,11 @@ void Surface::translateSurface(double x, double y, double z)
 		p.movePoint(x, y, z);
 	}
 }
+
+void Surface::rotateSurface(Point center, Vector axis, double angle)
+{
+	for(Point &p : point)
+	{
+		p.rotatePoint(center, axis, angle);
+	}
+}
