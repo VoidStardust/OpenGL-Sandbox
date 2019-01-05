@@ -279,11 +279,11 @@ void Model::loadMTL(std::istream &is)
 void Model::decode(std::string s, Surface &surface)
 {
 	int mode = 1;
-	int begin = s.find('/');
+	unsigned long long int begin = s.find('/');
 
 	if(begin != std::string::npos)
 	{
-		int n = s.rfind('/') - begin;
+		unsigned long long int n = s.rfind('/') - begin;
 		if(n == 0)
 			mode = 2;
 		else if(n == 1)
@@ -308,7 +308,8 @@ void Model::decode(std::string s, Surface &surface)
 		surface.addPoint(point[std::stoi(List[0])]);
 		surface.setNormal(normal[std::stoi(List[1])]);
 	}
-	else if(mode == 4)
+//	else if(mode == 4)
+	else
 	{
 		surface.addPoint(point[std::stoi(List[0])]);
 		surface.addTexturePoint(texturePoint[std::stoi(List[1])]);
