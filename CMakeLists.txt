@@ -3,5 +3,5 @@ project(OpenGL-Sandbox)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(OpenGL-Sandbox main.cpp point.cpp point.h surface.cpp surface.h model.cpp model.h vector.cpp vector.h camera.cpp camera.h group.cpp group.h texture.cpp texture.h material.cpp material.h LoadPNG/lodepng.cpp LoadPNG/lodepng.h LoadPNG/lodepng_util.cpp LoadPNG/lodepng_util.h)
+add_executable(OpenGL-Sandbox main.cpp point.cpp point.h surface.cpp surface.h model.cpp model.h vector.cpp vector.h camera.cpp camera.h group.cpp group.h texture.cpp texture.h material.cpp material.h LoadPNG/lodepng.cpp LoadPNG/lodepng.h LoadPNG/lodepng_util.cpp LoadPNG/lodepng_util.h loadtexture.cpp loadtexture.h)
 target_link_libraries(OpenGL-Sandbox opengl32 glu32 freeglut)

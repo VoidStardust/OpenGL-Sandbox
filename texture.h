@@ -9,18 +9,13 @@
 #include <iostream>
 #include <cmath>
 #include <GL/glu.h>
-#include <olectl.h>
-#include "LoadPNG/lodepng.h"
+#include "loadtexture.h"
 
 class Texture
 {
 private:
 	char *textureFile = nullptr;
 	GLuint textureID = 0;
-
-private:
-	bool LoadPNG(char *fileName);
-	bool LoadIMG(char *szPathName);
 
 public:
 	Texture() = default;
