@@ -25,6 +25,12 @@ void Model::getModel(std::istream &is)
 
 	Group *tempGroup = nullptr;
 	std::string s;
+	double maxX = -1e10;
+	double maxY = -1e10;
+	double maxZ = -1e10;
+	double minX = 1e10;
+	double minY = 1e10;
+	double minZ = 1e10;
 
 	while(getline(is, s))
 	{
@@ -67,6 +73,13 @@ void Model::getModel(std::istream &is)
 			x *= ratio;
 			y *= ratio;
 			z *= ratio;
+
+			maxX = std::max(maxX, x);
+			maxY = std::max(maxY, y);
+			maxZ = std::max(maxZ, z);
+			minX = std::min(minX, x);
+			minY = std::min(minY, y);
+			minZ = std::min(minZ, z);
 
 			point.emplace_back(x, y, z);
 		}
@@ -151,6 +164,8 @@ void Model::getModel(std::istream &is)
 		delete tempGroup;
 	}
 
+	center.setPoint((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2);
+	std::cout<< center.getX()<<' '<<center.getY()<<' '<<center.getZ()<<std::endl;
 	std::cout << "Model successfully loaded!" << std::endl;
 }
 
@@ -307,9 +322,19 @@ void Model::translateModel(double x, double y, double z)
 	{
 		g.translateGroup(x, y, z);
 	}
+	center.movePoint(x, y, z);
 }
 
 void Model::rotateModel(Point center, Vector axis, double angle)
+{
+	for(Group &g : group)
+	{
+		g.rotateGroup(center, axis, angle);
+	}
+	Model::center.rotatePoint(center, axis, angle);
+}
+
+void Model::rotateModel(Vector axis, double angle)
 {
 	for(Group &g : group)
 	{
@@ -342,4 +367,31 @@ std::vector<std::string> Model::stringToken(std::string token, char match)
 		}
 	}
 	return ret;
+}
+
+bool Model::movePath(std::vector<Vector> path)
+{
+	static unsigned int pos = 0;
+	Vector p = path[pos];
+	translateModel(p.getX(), p.getY(), p.getZ());
+	if(pos + 1 == path.size())
+	{
+		pos = 0;
+		return true;
+	}
+	else
+	{
+		pos++;
+		return false;
+	}
+}
+
+void Model::setCenter(const Point &point)
+{
+	Model::center = point;
+}
+
+Point Model::getCenter() const
+{
+	return center;
 }

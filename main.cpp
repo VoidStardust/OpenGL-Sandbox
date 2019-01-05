@@ -9,11 +9,12 @@
 using namespace std;
 
 const int WIDTH = 1000;
-const int HEIGHT = 500;
+const int HEIGHT = 800;
 
-Model model(0.001);
+Model model(0.03);
+Model kangaroo(0.006);
 Model skybox(1);
-Model plane(0.001);
+//Model plane(0.001);
 Camera camera(true);
 
 int x_pos = 0;
@@ -21,6 +22,26 @@ int y_pos = 0;
 int push_button = 0;
 
 const double ratio = 0.005;
+const double step = 10;
+
+vector<Vector> path;
+bool isMoving = false;
+
+vector<Vector> jumpInit(double angle, double w, double h)
+{
+	vector<Vector> ret;
+	double p = w * 2 / step;
+	double t = 0;
+	Point pre(0, 0, 0);
+	for(int i = 0; i <= step; ++i)
+	{
+		Point cur(cos(angle) * t, sin(angle) * t, -h * (t - w) * (t - w) / w / w + h);
+		ret.emplace_back(pre, cur);
+		pre = cur;
+		t += p;
+	}
+	return ret;
+}
 
 void initLight()
 {
@@ -86,93 +107,19 @@ void OnDraw()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	camera.setCamera();
 
+	if(isMoving)
+	{
+		isMoving = !kangaroo.movePath(path);
+	}
+
 	skybox.glDrawModel();
-	plane.glDrawModel();
+//	plane.glDrawModel();
+	kangaroo.glDrawModel();
 	model.glDrawModel();
 
 	glFlush();
 
-	plane.rotateModel(Point(0, 0, 0), Vector(0, 0, 1), 0.01);
-}
-
-void OnDraw1()
-{
-	static float rtri = 0, rquad = 0;
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
-	glPushMatrix();									// Reset The Current Modelview Matrix
-	glTranslatef(-1.5f,0.0f,-6.0f);						// Move Left 1.5 Units And Into The Screen 6.0
-	glRotatef(rtri,0.0f,1.0f,0.0f);						// Rotate The Triangle On The Y axis ( NEW )
-	glBegin(GL_TRIANGLES);								// Start Drawing A Triangle
-	glColor3f(1.0f,0.0f,0.0f);						// Red
-	glVertex3f( 0.0f, 1.0f, 0.0f);					// Top Of Triangle (Front)
-	glColor3f(0.0f,1.0f,0.0f);						// Green
-	glVertex3f(-1.0f,-1.0f, 1.0f);					// Left Of Triangle (Front)
-	glColor3f(0.0f,0.0f,1.0f);						// Blue
-	glVertex3f( 1.0f,-1.0f, 1.0f);					// Right Of Triangle (Front)
-	glColor3f(1.0f,0.0f,0.0f);						// Red
-	glVertex3f( 0.0f, 1.0f, 0.0f);					// Top Of Triangle (Right)
-	glColor3f(0.0f,0.0f,1.0f);						// Blue
-	glVertex3f( 1.0f,-1.0f, 1.0f);					// Left Of Triangle (Right)
-	glColor3f(0.0f,1.0f,0.0f);						// Green
-	glVertex3f( 1.0f,-1.0f, -1.0f);					// Right Of Triangle (Right)
-	glColor3f(1.0f,0.0f,0.0f);						// Red
-	glVertex3f( 0.0f, 1.0f, 0.0f);					// Top Of Triangle (Back)
-	glColor3f(0.0f,1.0f,0.0f);						// Green
-	glVertex3f( 1.0f,-1.0f, -1.0f);					// Left Of Triangle (Back)
-	glColor3f(0.0f,0.0f,1.0f);						// Blue
-	glVertex3f(-1.0f,-1.0f, -1.0f);					// Right Of Triangle (Back)
-	glColor3f(1.0f,0.0f,0.0f);						// Red
-	glVertex3f( 0.0f, 1.0f, 0.0f);					// Top Of Triangle (Left)
-	glColor3f(0.0f,0.0f,1.0f);						// Blue
-	glVertex3f(-1.0f,-1.0f,-1.0f);					// Left Of Triangle (Left)
-	glColor3f(0.0f,1.0f,0.0f);						// Green
-	glVertex3f(-1.0f,-1.0f, 1.0f);					// Right Of Triangle (Left)
-	glEnd();											// Done Drawing The Pyramid
-	glPopMatrix();
-
-	glPushMatrix();									// Reset The Current Modelview Matrix
-	glTranslatef(1.5f,0.0f,-7.0f);						// Move Right 1.5 Units And Into The Screen 7.0
-	glRotatef(rquad,1.0f,1.0f,1.0f);					// Rotate The Quad On The X axis ( NEW )
-	glBegin(GL_QUADS);									// Draw A Quad
-	glColor3f(0.0f,1.0f,0.0f);						// Set The Color To Green
-	glVertex3f( 1.0f, 1.0f,-1.0f);					// Top Right Of The Quad (Top)
-	glVertex3f(-1.0f, 1.0f,-1.0f);					// Top Left Of The Quad (Top)
-	glVertex3f(-1.0f, 1.0f, 1.0f);					// Bottom Left Of The Quad (Top)
-	glVertex3f( 1.0f, 1.0f, 1.0f);					// Bottom Right Of The Quad (Top)
-	glColor3f(1.0f,0.5f,0.0f);						// Set The Color To Orange
-	glVertex3f( 1.0f,-1.0f, 1.0f);					// Top Right Of The Quad (Bottom)
-	glVertex3f(-1.0f,-1.0f, 1.0f);					// Top Left Of The Quad (Bottom)
-	glVertex3f(-1.0f,-1.0f,-1.0f);					// Bottom Left Of The Quad (Bottom)
-	glVertex3f( 1.0f,-1.0f,-1.0f);					// Bottom Right Of The Quad (Bottom)
-	glColor3f(1.0f,0.0f,0.0f);						// Set The Color To Red
-	glVertex3f( 1.0f, 1.0f, 1.0f);					// Top Right Of The Quad (Front)
-	glVertex3f(-1.0f, 1.0f, 1.0f);					// Top Left Of The Quad (Front)
-	glVertex3f(-1.0f,-1.0f, 1.0f);					// Bottom Left Of The Quad (Front)
-	glVertex3f( 1.0f,-1.0f, 1.0f);					// Bottom Right Of The Quad (Front)
-	glColor3f(1.0f,1.0f,0.0f);						// Set The Color To Yellow
-	glVertex3f( 1.0f,-1.0f,-1.0f);					// Top Right Of The Quad (Back)
-	glVertex3f(-1.0f,-1.0f,-1.0f);					// Top Left Of The Quad (Back)
-	glVertex3f(-1.0f, 1.0f,-1.0f);					// Bottom Left Of The Quad (Back)
-	glVertex3f( 1.0f, 1.0f,-1.0f);					// Bottom Right Of The Quad (Back)
-	glColor3f(0.0f,0.0f,1.0f);						// Set The Color To Blue
-	glVertex3f(-1.0f, 1.0f, 1.0f);					// Top Right Of The Quad (Left)
-	glVertex3f(-1.0f, 1.0f,-1.0f);					// Top Left Of The Quad (Left)
-	glVertex3f(-1.0f,-1.0f,-1.0f);					// Bottom Left Of The Quad (Left)
-	glVertex3f(-1.0f,-1.0f, 1.0f);					// Bottom Right Of The Quad (Left)
-	glColor3f(1.0f,0.0f,1.0f);						// Set The Color To Violet
-	glVertex3f( 1.0f, 1.0f,-1.0f);					// Top Right Of The Quad (Right)
-	glVertex3f( 1.0f, 1.0f, 1.0f);					// Top Left Of The Quad (Right)
-	glVertex3f( 1.0f,-1.0f, 1.0f);					// Bottom Left Of The Quad (Right)
-	glVertex3f( 1.0f,-1.0f,-1.0f);					// Bottom Right Of The Quad (Right)
-	glEnd();											// Done Drawing The Quad
-	glPopMatrix();
-
-	glFlush();
-
-	camera.setCamera();
-
-	rtri+=0.01f;											// Increase The Rotation Variable For The Triangle ( NEW )
-	rquad-=0.01f;										// Decrease The Rotation Variable For The Quad ( NEW )
+//	plane.rotateModel(Point(0, 0, 0), Vector(0, 0, 1), 0.01);
 }
 
 void reshape(int width, int height)
@@ -214,6 +161,7 @@ void OnMouse(int button, int state, int x, int y)
 
 void OnKeyboard(unsigned char key, int x, int y)
 {
+	static double angle = 0;
 	if(key == 'w')
 		camera.translate(0, ratio * 10, 0);
 	if(key == 'a')
@@ -222,10 +170,26 @@ void OnKeyboard(unsigned char key, int x, int y)
 		camera.translate(0, -ratio * 10, 0);
 	if(key == 'd')
 		camera.translate(ratio * 10, 0, 0);
+	if(key == 'j')
+	{
+		isMoving = true;
+		path = jumpInit(angle, 0.5, 1);
+	}
 	if(key == 'q')
-		plane.rotateModel(Point(0, 10, 0), Vector(0, 0, 1), 0.01);
+	{
+		kangaroo.rotateModel(Vector(0, 0, 1), 0.05);
+		angle += 0.05;
+	}
 	if(key == 'e')
-		plane.rotateModel(Point(0, 10, 0), Vector(0, 0, 1), -0.01);
+	{
+		kangaroo.rotateModel(Vector(0, 0, 1), -0.05);
+		angle -= 0.05;
+	}
+
+//	if(key == 'q')
+//		plane.rotateModel(Point(0, 10, 0), Vector(0, 0, 1), 0.01);
+//	if(key == 'e')
+//		plane.rotateModel(Point(0, 10, 0), Vector(0, 0, 1), -0.01);
 }
 
 void OnMove(int x, int y)
@@ -262,27 +226,28 @@ int main(int argc, char *argv[])
 	initGL();
 	initLight();
 
-	fstream input1("Castelia_City/Castelia_City.obj");
+//	fstream input1("Castelia_City/Castelia_City.obj");
 //	fstream input1("twins/Twin_Islands.obj");
 //	fstream input1("mech_f_432.obj");
 //	fstream input1("airplane/11803_Airplane_v1_l1.obj");
 //	fstream input1("boat/12219_boat_v2_L2.obj");
 //	fstream input1("test/test.obj");
+	fstream input1("island/Small_Tropical_Island.obj");
 	model.getModel(input1);
 	input1.close();
 
 	model.rotateModel(Point(0, 0, 0), Vector(1, 0, 0), 1.5707963267948966192313216916398);
+	model.translateModel(0, 0, -1.5);
 
-	fstream input2("airplane/11803_Airplane_v1_l1.obj");
-	plane.getModel(input2);
+	fstream input2("kangaroo/12271_Kangaroo_v1_L3.obj");
+	kangaroo.getModel(input2);
 	input2.close();
-
-	plane.rotateModel(Point(0, 0, 0), Vector(1, 0, 0), 1.5707963267948966192313216916398);
-	plane.translateModel(0, -30, 20);
 
 	fstream input3("test/test.obj");
 	skybox.getModel(input3);
 	input3.close();
+
+	skybox.translateModel(0, 0, -8);
 
 	glutDisplayFunc(OnDraw);
 	glutIdleFunc(OnDraw);

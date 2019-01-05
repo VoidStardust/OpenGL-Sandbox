@@ -28,10 +28,7 @@ private:
 
 private:
 	double ratio = 1;
-//	Vector translate = {-1, 0, 0};
-//	double angleX = 0;
-//	double angleY = 0;
-//	double angleZ = 0;
+	Point center = {0, 0, 0};
 
 private:
 	void loadMTL(std::istream &is);
@@ -42,12 +39,16 @@ public:
 	Model() = default;
 	Model(double ratio);
 	explicit Model(std::istream &is);
+	void setCenter(const Point &point);
+	Point getCenter() const;
 
 public:
 	void glDrawModel();
 	void getModel(std::istream &is);
 	void translateModel(double x, double y, double z);
 	void rotateModel(Point center, Vector axis, double angle);
+	void rotateModel(Vector axis, double angle);
+	bool movePath(std::vector<Vector> path);
 };
 
 
