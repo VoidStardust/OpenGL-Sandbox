@@ -1,6 +1,5 @@
 #ifndef LIGHT_H_INCLUDED
 #define LIGHT_H_INCLUDED
-#define GLUT_DISABLE_ATEXIT_HACK
 
 #include <GL/gl.h>
 #include <GL/glaux.h>

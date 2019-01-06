@@ -1,5 +1,3 @@
-#define GLUT_DISABLE_ATEXIT_HACK
-
 #include <GL/glew.h>
 #include <stdio.h>
 #include <stdlib.h>
