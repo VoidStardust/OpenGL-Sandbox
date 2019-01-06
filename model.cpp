@@ -230,7 +230,7 @@ void Model::loadMTL(std::istream &is)
 			{
 				ks.emplace_back(std::stod(List[i]));
 			}
-			tempMaterial->setKd(ks);
+			tempMaterial->setKs(ks);
 		}
 		else if(label == "Ke")
 		{
@@ -239,7 +239,7 @@ void Model::loadMTL(std::istream &is)
 			{
 				ke.emplace_back(std::stod(List[i]));
 			}
-			tempMaterial->setKd(ke);
+			tempMaterial->setKe(ke);
 		}
 		else if(label == "Ni")
 		{
